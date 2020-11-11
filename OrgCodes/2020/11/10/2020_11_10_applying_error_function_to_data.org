@@ -1,0 +1,44 @@
+#+TITLE: Applying error function to observational data
+#+DATE: <2020-11-10 Tue>
+
+* Introduction
+
+We need to fit a model to observational data. We use a density function to determinate if the fitted model is good. Since the observational data don't completely cover the observational space, We need that every bin in the density function must have the same weight.
+
+** Loading data
+
+We load the observational data.
+
+#+NAME: DataLoad
+#+BEGIN_SRC python :noweb yes :results output
+import os
+from code.read_obs_tables import get_Marino_data_werr, get_Marino_data
+DataPath = os.getenv('DATAFILES')
+Mar_err = get_Marino_data_werr(DataPath + 'obs/catalog_M13+err.csv')
+Mar = get_Marino_data(DataPath + 'obs/NEWcomp_HIIregions_v1.txt')
+print('Data Loaded')
+#+END_SRC
+
+#+RESULTS: DataLoad
+: Data Loaded
+
+** Data Visualization
+We plot the data in a diagnostic diagram
+
+#+BEGIN_SRC python :noweb yes :results file
+<<DataLoad>>
+import numpy as np
+import matplotlib.pyplot as plt
+from code.diagnostic_diagrams_plots import DiagnosticDiagramScatterPlot
+fig, ax = plt.subplots()
+DiagnosticDiagramScatterPlot(np.log10(Mar_err['N2/Ha']),
+                             np.log10(Mar_err['O3/Hb']), type_plot='O3N2',
+                             ax=ax, color='b', alpha=0.75
+                         )
+fig.tight_layout()
+fig.savefig('images/ObsDiagPlot.png')
+return 'images/ObsDiagPlot.png'
+#+END_SRC
+
+#+RESULTS:
+[[file:images/ObsDiagPlot.png]]
