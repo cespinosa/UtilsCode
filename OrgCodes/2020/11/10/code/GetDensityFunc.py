@@ -12,7 +12,7 @@ def kdeHist(x, y, xbins=30, ybins=23,
     y_m = y[mask_x & mask_y]
     counts, _xbins, _ybins = np.histogram2d(x_m, y_m, bins=[xbins, ybins],
                                           density=True,
-                                          range=[[-3,0],[-1.25,1]])
+                                          range=[xlim,ylim])
     xx, yy = np.mgrid[xlim[0]:xlim[1]:complex(0,xbins),
                       ylim[0]:ylim[1]:complex(0,ybins)]
     # xx, yy = np.meshgrid(xbins, ybins, indexing='ij')
