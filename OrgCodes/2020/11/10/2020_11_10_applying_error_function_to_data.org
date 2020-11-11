@@ -43,4 +43,4 @@ return 'images/ObsDiagPlot.png'
 #+RESULTS:
 [[file:images/ObsDiagPlot.png]]
 
-file:images/ObsDiagPlot.png
+[[file:images/ObsDiagPlot.png]]
