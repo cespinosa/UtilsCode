@@ -22,6 +22,8 @@ print('Data Loaded')
 #+RESULTS: DataLoad
 : Data Loaded
 
+
+
 ** Data Visualization
 We plot the data in a diagnostic diagram
 
