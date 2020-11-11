@@ -104,4 +104,5 @@ return 'images/DensFunc.png'
 
 #+RESULTS:
 [[file:images/DensFunc.png]]
+
 [[file:images/DensFunc.png]]
