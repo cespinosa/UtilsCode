@@ -28,15 +28,17 @@ print('Data Loaded')
 We plot the data in a diagnostic diagram
 
 #+BEGIN_SRC python :noweb yes :results file
-<<DataLoad>>
+
 import numpy as np
 import matplotlib.pyplot as plt
 from code.diagnostic_diagrams_plots import DiagnosticDiagramScatterPlot
+<<DataLoad>>
 fig, ax = plt.subplots()
 DiagnosticDiagramScatterPlot(np.log10(Mar_err['N2/Ha']),
                              np.log10(Mar_err['O3/Hb']), type_plot='O3N2',
-                             ax=ax, color='b', alpha=0.75
-                         )
+                             ax=ax, color='b', alpha=0.75,
+                             xmin=-2.7
+                             )
 fig.tight_layout()
 fig.savefig('images/ObsDiagPlot.png')
 return 'images/ObsDiagPlot.png'
@@ -46,3 +48,60 @@ return 'images/ObsDiagPlot.png'
 [[file:images/ObsDiagPlot.png]]
 
 [[file:images/ObsDiagPlot.png]]
+
+* Applying the function error
+** Getting the density function
+To get the density function of the data, we calculate a 2D Histogram and then it is normalize by the max value.
+
+#+NAME: GetDensMap
+#+BEGIN_SRC python :noweb yes
+import numpy as np
+from code.GetDensityFunc import kdeHist
+<<DataLoad>>
+xp = np.log10(Mar_err['N2/Ha'])
+yp = np.log10(Mar_err['O3/Hb'])
+HistMap = kdeHist(xp, yp)
+xx = HistMap[0]
+yy = HistMap[1]
+zz = HistMap[2]
+zz /= zz.max()
+#+END_SRC
+
+#+RESULTS: GetDensMap
+: None
+
+
+** Convolution with a Gaussian Func
+The original data could be peaky, in order to get a smooth distribution, we convolve the original data with a Gaussian function.
+
+#+NAME: GetConvDensMap
+#+BEGIN_SRC python :noweb yes
+from astropy.convolution import Gaussian2DKernel, convolve
+<<GetDensMap>>
+kernel = Gaussian2DKernel(x_stddev=0.65)
+zzConv = convolve(zz, kernel)
+#+END_SRC
+
+#+RESULTS: GetConvDensMap
+: None
+
+*** Ploting the results
+We can see in the figure the result of the convolution with a Gaussian function
+#+BEGIN_SRC python :noweb yes :results file
+import matplotlib.pyplot as plt
+from code.misc import color_map_califa_old
+<<GetConvDensMap>>
+cmap = color_map_califa_old()
+fig, axes = plt.subplots(1, 2, figsize=(8, 3))
+axes[0].imshow(zz.transpose(), origin='lower', cmap=cmap)
+axes[1].imshow(zzConv.transpose(), origin='lower', cmap=cmap)
+axes[0].set_title('Original Data')
+axes[1].set_title('Conv Data')
+fig.tight_layout()
+fig.savefig('images/DensFunc.png')
+return 'images/DensFunc.png'
+#+END_SRC
+
+#+RESULTS:
+[[file:images/DensFunc.png]]
+[[file:images/DensFunc.png]]
