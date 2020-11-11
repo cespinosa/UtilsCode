@@ -5,6 +5,8 @@
 
 We need to fit a model to observational data. We use a density function to determinate if the fitted model is good. Since the observational data don't completely cover the observational space, We need that every bin in the density function must have the same weight.
 
+* Hands on
+
 ** Loading data
 
 We load the observational data.
@@ -60,7 +62,7 @@ from code.GetDensityFunc import kdeHist
 <<DataLoad>>
 xp = np.log10(Mar_err['N2/Ha'])
 yp = np.log10(Mar_err['O3/Hb'])
-HistMap = kdeHist(xp, yp)
+HistMap = kdeHist(xp, yp, xlim=[-2.7, 0.5], ylim=[-2.5, 1.2])
 xx = HistMap[0]
 yy = HistMap[1]
 zz = HistMap[2]
@@ -92,11 +94,16 @@ import matplotlib.pyplot as plt
 from code.misc import color_map_califa_old
 <<GetConvDensMap>>
 cmap = color_map_califa_old()
-fig, axes = plt.subplots(1, 2, figsize=(8, 3))
-axes[0].imshow(zz.transpose(), origin='lower', cmap=cmap)
-axes[1].imshow(zzConv.transpose(), origin='lower', cmap=cmap)
+fig, axes = plt.subplots(1, 2, figsize=(7.5,3.5))
+axes[0].imshow(zz.transpose(), origin='lower', cmap=cmap,
+               extent=[-2.7, 0.5, -2.5, 1.2], aspect='auto',
+               vmin=0, vmax=1)
+plot = axes[1].imshow(zzConv.transpose(), origin='lower', cmap=cmap,
+               extent=[-2.7, 0.5, -2.5, 1.2], aspect='auto',
+               vmin=0, vmax=1)
 axes[0].set_title('Original Data')
 axes[1].set_title('Conv Data')
+fig.colorbar(plot)
 fig.tight_layout()
 fig.savefig('images/DensFunc.png')
 return 'images/DensFunc.png'
@@ -106,3 +113,28 @@ return 'images/DensFunc.png'
 [[file:images/DensFunc.png]]
 
 [[file:images/DensFunc.png]]
+
+** Applying a err function
+Since each bin in the above density map will be a weight to the model fit, it is convenient that each bin have a value ~1. For this, we apply a error function.
+
+#+BEGIN_SRC python :noweb yes :results file
+from scipy.special import erf
+import matplotlib.pyplot as plt
+from code.misc import color_map_califa_old
+<<GetConvDensMap>>
+cmap = color_map_califa_old()
+erfzzConv = erf((zzConv-0.02)/0.1)
+fig, ax = plt.subplots()
+plot = ax.imshow(erfzzConv.transpose(), origin='lower', cmap=cmap,
+                 extent=[-2.7, 0.5, -2.5, 1.2], aspect='auto',
+                 vmin=0, vmax=1)
+fig.colorbar(plot)
+fig.tight_layout()
+fig.savefig('images/erfDensFunc.png')
+return 'images/erfDensFunc.png'
+#+END_SRC
+
+#+RESULTS:
+[[file:images/erfDensFunc.png]]
+
+[[file:images/erfDensFunc.png]]
