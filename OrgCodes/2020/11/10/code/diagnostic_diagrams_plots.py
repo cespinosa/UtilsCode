@@ -139,13 +139,13 @@ def DiagnosticDiagramScatterPlot(x, y, z=None, type_plot='O3N2', ax=None,
     params['vmin'] = vmin
     params['vmax'] = vmax
     if xmin is not None:
-        params['xmin'] = xmin
+        params['xlim'][0] = xmin
     if xmax is not None:
-        params['xmax'] = xmax
+        params['xlim'][1] = xmax
     if ymin is not None:
-        params['ymin'] = ymin
+        params['ylim'][0] = ymin
     if ymax is not None:
-        params['ymax'] = ymax
+        params['ylim'][1] = ymax
     params['dcurves'] = dcurves
     if z is None:
         plot = ax.scatter(x, y, c=color, marker=marker, s=s, alpha=alpha,
