@@ -42,3 +42,5 @@ return 'images/ObsDiagPlot.png'
 
 #+RESULTS:
 [[file:images/ObsDiagPlot.png]]
+
+file:images/sitemap-function.png
