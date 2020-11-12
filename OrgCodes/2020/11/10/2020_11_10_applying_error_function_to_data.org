@@ -91,6 +91,7 @@ zzConv = convolve(zz, kernel)
 We can see in the figure the result of the convolution with a Gaussian function
 #+BEGIN_SRC python :noweb yes :results file
 import matplotlib.pyplot as plt
+from code.misc import color_map_califa_old, Kf_curve_plot, Kw_curve_plot, Gr_curve_plot, Es_curve_plot
 from code.misc import color_map_califa_old
 <<GetConvDensMap>>
 cmap = color_map_califa_old()
@@ -103,6 +104,16 @@ plot = axes[1].imshow(zzConv.transpose(), origin='lower', cmap=cmap,
                vmin=0, vmax=1)
 axes[0].set_title('Original Data')
 axes[1].set_title('Conv Data')
+Kf_curve_plot(ax=axes[0], x_min=-2.7, color='k')
+Kw_curve_plot(ax=axes[0], x_min=-2.7, color='k')
+Gr_curve_plot(ax=axes[0], x_min=-2.7, color='k')
+Es_curve_plot(ax=axes[0], x_min=-2.7, color='k')
+axes[0].set_ylim(-2.5, 1.2)
+Kf_curve_plot(ax=axes[1], x_min=-2.7, color='k')
+Kw_curve_plot(ax=axes[1], x_min=-2.7, color='k')
+Gr_curve_plot(ax=axes[1], x_min=-2.7, color='k')
+Es_curve_plot(ax=axes[1], x_min=-2.7, color='k')
+axes[1].set_ylim(-2.5, 1.2)
 fig.colorbar(plot)
 fig.tight_layout()
 fig.savefig('images/DensFunc.png')
@@ -120,7 +131,7 @@ Since each bin in the above density map will be a weight to the model fit, it is
 #+BEGIN_SRC python :noweb yes :results file
 from scipy.special import erf
 import matplotlib.pyplot as plt
-from code.misc import color_map_califa_old
+from code.misc import color_map_califa_old, Kf_curve_plot, Kw_curve_plot, Gr_curve_plot, Es_curve_plot
 <<GetConvDensMap>>
 cmap = color_map_califa_old()
 erfzzConv = erf((zzConv-0.02)/0.1)
@@ -128,6 +139,11 @@ fig, ax = plt.subplots()
 plot = ax.imshow(erfzzConv.transpose(), origin='lower', cmap=cmap,
                  extent=[-2.7, 0.5, -2.5, 1.2], aspect='auto',
                  vmin=0, vmax=1)
+Kf_curve_plot(ax=ax, x_min=-2.7, color='k')
+Kw_curve_plot(ax=ax, x_min=-2.7, color='k')
+Gr_curve_plot(ax=ax, x_min=-2.7, color='k')
+Es_curve_plot(ax=ax, x_min=-2.7, color='k')
+ax.set_ylim(-2.5, 1.2)
 fig.colorbar(plot)
 fig.tight_layout()
 fig.savefig('images/erfDensFunc.png')
